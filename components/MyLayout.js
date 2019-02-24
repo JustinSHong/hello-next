@@ -10,10 +10,11 @@ const Layout = props => (
                 display: flex;
                 flex-wrap: wrap;
                 flex-direction: column;
-                justify-content: space-around;
+                justify-content: flex-start;
                 align-items: flex-start;
                 margin: 20px;
                 padding: 20px;
+                min-height: 50vh;
             }
         `}</style>
     </div>
