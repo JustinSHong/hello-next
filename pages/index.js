@@ -4,33 +4,29 @@ import Layout from "../components/MyLayout";
 // Link is an HOC that accepts href and similar props
 // child components must accept 'onClick' prop
 
-// dynamic pages using query strings
-// const PostLink = props => (
-//     <li>
-//         <Link href={`/post?title=${props.title}`}>
-//             <a>{props.title}</a>
-//         </Link>
-//     </li>
-// );
-
-// const Index = () => (
-//     <Layout>
-//         <h1>My Blog</h1>
-//         <ul>
-//             <PostLink title="Hello Next.js" />
-//             <PostLink title="Learn Next.js" />
-//             <PostLink title="Deploy apps with Zeit" />
-//         </ul>
-//         <p>Hello Next.js</p>
-//     </Layout>
-// );
+const getPosts = () => {
+    return [
+        { id: "hello-nextjs", title: "Hello Next.js" },
+        { id: "learn-nextjs", title: "Learn Next.js is awesome" },
+        { id: "deploy-nextjs", title: "Deploy apps with ZEIT" }
+    ];
+};
 
 // dyanmic pages using route masking - clean urls
-const PostLink = props => (
+const PostLink = ({ post }) => (
     <li>
-        <Link prefetch as={`/p/${props.id}`} href={`/post?title=${props.id}`}>
-            <a>{props.title}</a>
+        <Link prefetch as={`/p/${post.id}`} href={`/post?title=${post.title}`}>
+            <a>{post.title}</a>
         </Link>
+        <style jsx>{`
+            a {
+                text-decoration: none;
+            }
+            li {
+                list-style: none;
+                margin: 5px 0;
+            }
+        `}</style>
     </li>
 );
 
@@ -43,6 +39,15 @@ const ShowLink = props => (
         >
             <a>{props.show.name}</a>
         </Link>
+        <style jsx>{`
+            a {
+                text-decoration: none;
+            }
+            li {
+                list-style: none;
+                margin: 5px 0;
+            }
+        `}</style>
     </li>
 );
 
@@ -50,17 +55,26 @@ const Index = props => (
     <Layout>
         <h1>My Blog</h1>
         <ul>
-            <PostLink id="hello-nextjs" title="Hello Next.js" />
-            <PostLink id="learn-nextjs" title="Learn Next.js" />
-            <PostLink id="deploy-nextjs" title="Deploy apps with Zeit" />
+            {getPosts().map(post => (
+                <PostLink key={post.id} post={post} />
+            ))}
         </ul>
-        <p>Hello Next.js</p>
+        <h2>Hello Next.js</h2>
         <h1>Batman TV Shows</h1>
         <ul>
             {props.shows.map((item, index) => (
                 <ShowLink show={item.show} />
             ))}
         </ul>
+        <style jsx>{`
+            ul {
+                height: 200px;
+                min-width: 25%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+            }
+        `}</style>
     </Layout>
 );
 
