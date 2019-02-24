@@ -28,8 +28,20 @@ import Layout from "../components/MyLayout";
 // dyanmic pages using route masking - clean urls
 const PostLink = props => (
     <li>
-        <Link as={`/p/${props.id}`} href={`/post?title=${props.title}`}>
+        <Link prefetch as={`/p/${props.id}`} href={`/post?title=${props.id}`}>
             <a>{props.title}</a>
+        </Link>
+    </li>
+);
+
+const ShowLink = props => (
+    <li>
+        <Link
+            prefetch
+            as={`/s/${props.show.id}`}
+            href={`/show?id=${props.show.id}`}
+        >
+            <a>{props.show.name}</a>
         </Link>
     </li>
 );
@@ -46,14 +58,7 @@ const Index = props => (
         <h1>Batman TV Shows</h1>
         <ul>
             {props.shows.map((item, index) => (
-                <li key={index}>
-                    <Link
-                        as={`/p/${item.show.id}`}
-                        href={`/post?id=${item.show.id}`}
-                    >
-                        <a>{item.show.name}</a>
-                    </Link>
-                </li>
+                <ShowLink show={item.show} />
             ))}
         </ul>
     </Layout>
@@ -62,9 +67,6 @@ const Index = props => (
 Index.getInitialProps = async function() {
     const res = await fetch("https://api.tvmaze.com/search/shows?q=batman");
     const data = await res.json();
-
-    // console.log(`data fetched ${data.length}`);
-    // console.log(`tv shows ${JSON.stringify(data[0])}`);
 
     return {
         shows: data
