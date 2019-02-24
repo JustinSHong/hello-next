@@ -1,5 +1,5 @@
 import Link from "next/link"; // supports client side routing
-import Header from "../components/Header";
+import fetch from "isomorphic-unfetch";
 import Layout from "../components/MyLayout";
 // Link is an HOC that accepts href and similar props
 // child components must accept 'onClick' prop
@@ -34,7 +34,7 @@ const PostLink = props => (
     </li>
 );
 
-const Index = () => (
+const Index = props => (
     <Layout>
         <h1>My Blog</h1>
         <ul>
@@ -43,7 +43,32 @@ const Index = () => (
             <PostLink id="deploy-nextjs" title="Deploy apps with Zeit" />
         </ul>
         <p>Hello Next.js</p>
+        <h1>Batman TV Shows</h1>
+        <ul>
+            {props.shows.map((item, index) => (
+                <li key={index}>
+                    <Link
+                        as={`/p/${item.show.id}`}
+                        href={`/post?id=${item.show.id}`}
+                    >
+                        <a>{item.show.name}</a>
+                    </Link>
+                </li>
+            ))}
+        </ul>
     </Layout>
 );
+
+Index.getInitialProps = async function() {
+    const res = await fetch("https://api.tvmaze.com/search/shows?q=batman");
+    const data = await res.json();
+
+    // console.log(`data fetched ${data.length}`);
+    // console.log(`tv shows ${JSON.stringify(data[0])}`);
+
+    return {
+        shows: data
+    };
+};
 
 export default Index;
